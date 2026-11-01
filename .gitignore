@@ -39,14 +39,11 @@ coverage/
 .nyc_output
 
 # Media & Large Assets
-*.mp4
 *.webm
 *.ttf
 *.otf
 *.woff
 *.woff2
-public/*.mp4
-public/media/*.mp4
 
 # Misc
 *.log
