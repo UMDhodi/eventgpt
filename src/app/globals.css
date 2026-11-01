@@ -1,0 +1,346 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   EventGpt — Figma UI/UX Handbook Design System
+   "Curtain Up" Cinematic Theme with Per-Page Accents
+   ========================================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400..700;1,9..40,400..700&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400;500;600&family=Syne:wght@700;800&display=swap');
+
+:root {
+  /* Fonts */
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+  --font-serif: 'Instrument Serif', Georgia, serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Base Tokens */
+  --color-ink-950: #0B0A10;
+  --color-ink-900: #14121C;
+  --color-ink-700: #2A2636;
+  --color-ivory-50: #F6F0E6;
+  --color-white: #FFFFFF;
+  --color-muted: #A9A3B8;
+
+  /* Default theme: Home */
+  --accent: #E8B84A;
+  --accent-2: #7B4DFF;
+  --accent-rgb: 232, 184, 74;
+  --glow: linear-gradient(135deg, #E8B84A 0%, #7B4DFF 100%);
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+
+  /* Easing Tokens (Handbook Section 5) */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ── Per-Page Themes (Handbook Section 3) ── */
+[data-theme="home"] {
+  --accent: #E8B84A;
+  --accent-2: #7B4DFF;
+  --accent-rgb: 232, 184, 74;
+  --glow: linear-gradient(135deg, #E8B84A 0%, #7B4DFF 100%);
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+}
+
+[data-theme="concert"] {
+  --accent: #7B4DFF;
+  --accent-2: #2FA8FF;
+  --accent-rgb: 123, 77, 255;
+  --glow: linear-gradient(160deg, #7B4DFF 0%, #2FA8FF 100%);
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+}
+
+[data-theme="wedding"] {
+  --accent: #8FA98A;
+  --accent-2: #E9D8C4;
+  --accent-rgb: 143, 169, 138;
+  --glow: linear-gradient(120deg, #E9D8C4 0%, #8FA98A 100%);
+  --bg: #F6F0E6; /* Light ivory theme for Wedding */
+  --text: #1C1A17;
+  --card-bg: #EFE7DA;
+  --border-color: rgba(42, 38, 54, 0.12);
+}
+
+[data-theme="birthday"] {
+  --accent: #FFC83D;
+  --accent-2: #FF6B6B;
+  --accent-rgb: 255, 200, 61;
+  --glow: linear-gradient(135deg, #FFC83D 0%, #FF6B6B 100%);
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+}
+
+[data-theme="ai"] {
+  --accent: #6EE7C8;
+  --accent-2: #7B4DFF;
+  --accent-rgb: 110, 231, 200;
+  --glow: linear-gradient(135deg, #6EE7C8 0%, #7B4DFF 100%);
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+}
+
+[data-theme="checkout"] {
+  --accent: #E8B84A;
+  --accent-2: #E8B84A;
+  --accent-rgb: 232, 184, 74;
+  --glow: none;
+  --bg: #0B0A10;
+  --text: #F6F0E6;
+  --card-bg: #14121C;
+  --border-color: #2A2636;
+}
+
+/* ── Document Base ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* ── Typography Scale (Handbook Section 2) ── */
+.display-xxl {
+  font-family: var(--font-display);
+  font-size: clamp(84px, 14vw, 200px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+
+.display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 9vw, 120px);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.h1 {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 5.5vw, 72px);
+  font-weight: 700;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+}
+
+.h2 {
+  font-family: var(--font-display);
+  font-size: clamp(30px, 3.8vw, 48px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+}
+
+.h3 {
+  font-family: var(--font-display);
+  font-size: clamp(22px, 2.2vw, 28px);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.body-lg {
+  font-family: var(--font-body);
+  font-size: clamp(18px, 1.4vw, 20px);
+  line-height: 1.5;
+}
+
+.body-default {
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.caption {
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.serif-italic {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+}
+
+/* ── Hero Video Overlay (Handbook Section 3) ── */
+.hero-video-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(11, 10, 16, 0.55) 0%,
+    rgba(11, 10, 16, 0.25) 40%,
+    rgba(11, 10, 16, 0.75) 100%
+  );
+}
+
+.hero-video-overlay-light {
+  background: linear-gradient(
+    180deg,
+    rgba(246, 240, 230, 0.45) 0%,
+    rgba(246, 240, 230, 0.2) 40%,
+    rgba(246, 240, 230, 0.85) 100%
+  );
+}
+
+/* ── Buttons (Handbook Section 4) ── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  height: 56px;
+  padding: 0 2rem;
+  border-radius: 9999px;
+  background-color: var(--accent);
+  color: #0B0A10;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  transition: transform 0.3s var(--ease-out-expo),
+              box-shadow 0.3s var(--ease-out-expo),
+              filter 0.3s var(--ease-out-expo);
+  cursor: pointer;
+  border: none;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.4);
+  filter: brightness(1.05);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  height: 56px;
+  padding: 0 2rem;
+  border-radius: 9999px;
+  background: transparent;
+  border: 1px solid var(--color-ivory-50);
+  color: var(--color-ivory-50);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 1rem;
+  transition: transform 0.3s var(--ease-out-expo),
+              background 0.3s var(--ease-out-expo),
+              border-color 0.3s var(--ease-out-expo);
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  background: rgba(246, 240, 230, 0.1);
+  border-color: #FFFFFF;
+}
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent;
+  border: none;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-ghost:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* ── Cards & Panels (Handbook Section 4) ── */
+.event-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  transition: transform 0.4s var(--ease-out-expo),
+              border-color 0.4s var(--ease-out-expo),
+              box-shadow 0.4s var(--ease-out-expo);
+}
+
+.event-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent);
+  box-shadow: 0 0 80px rgba(var(--accent-rgb), 0.25);
+}
+
+/* ── 3D Card Ring Perspective ── */
+.ring-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0B0A10;
+}
+::-webkit-scrollbar-thumb {
+  background: #2A2636;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(var(--accent-rgb), 0.3);
+  color: #FFFFFF;
+}
+
+/* ── Focus Rings ── */
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}

@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventGpt Interactive Blueprint Printer</title>
+    <style>
+        :root {
+            --bg-color: #07090D;
+            --printer-bg: #222222;
+            --printer-border: #2b2b2b;
+            --paper-bg: #f4f3ef;
+            --text-dark: #111111;
+            --text-red: #d32f2f;
+            --led-green: #39ff14;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            color: #f4f3ef;
+            font-family: monospace;
+        }
+
+        /* Printer Wrapper Container */
+        .printer-container {
+            position: relative;
+            width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        /* Top Printer Cap Assembly */
+        .printer-hardware {
+            position: relative;
+            width: 100%;
+            height: 75px;
+            background: linear-gradient(180deg, #282828 0%, #1e1e1e 100%);
+            border: 1px solid var(--printer-border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            box-sizing: border-box;
+            justify-content: space-between;
+        }
+
+        /* LED Indicator & Status Label */
+        .status-panel {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #888;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .status-led {
+            width: 8px;
+            height: 8px;
+            background-color: #444;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        /* Blinking state during active printing */
+        .printing .status-led {
+            background-color: var(--led-green);
+            box-shadow: 0 0 10px var(--led-green);
+            animation: pulse-led 1s infinite alternate;
+        }
+
+        .printing .status-panel {
+            color: #bbb;
+        }
+
+        /* Dark mechanical slot cut out */
+        .printer-slot {
+            position: absolute;
+            bottom: 0;
+            left: 5%;
+            width: 90%;
+            height: 4px;
+            background-color: #0b0b0b;
+            border-radius: 2px 2px 0 0;
+        }
+
+        /* The Receipt Paper Asset */
+        .receipt-paper {
+            position: relative;
+            width: 86%;
+            background-color: var(--paper-bg);
+            color: var(--text-dark);
+            box-sizing: border-box;
+            padding: 20px 16px 24px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 5;
+
+            /* Initial Hidden Hidden Positioning under the print head */
+            max-height: 0px;
+            transform: translateY(-75px);
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 1.8s cubic-bezier(0.25, 1, 0.5, 1),
+                transform 1.8s cubic-bezier(0.25, 1, 0.5, 1),
+                opacity 0.2s linear;
+        }
+
+        /* CSS Jagged Zigzag Bottom Edge Tear styling */
+        .receipt-paper::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(-45deg, var(--bg-color) 6px, transparent 0),
+                linear-gradient(45deg, var(--bg-color) 6px, transparent 0);
+            background-size: 12px 12px;
+            background-repeat: repeat-x;
+        }
+
+        /* Layout rows formatting inside the receipt */
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            white-space: pre;
+        }
+
+        .receipt-divider {
+            border-bottom: 2px dashed #bbb;
+            margin: 12px 0;
+        }
+
+        .danger-text {
+            color: var(--text-red);
+            font-weight: bold;
+        }
+
+        /* Animation trigger activation class injected via JS */
+        .printing .receipt-paper {
+            opacity: 1;
+            max-height: 480px;
+            transform: translateY(0px);
+        }
+
+        /* Trigger Button layout styling */
+        .action-button {
+            background-color: #ffffff;
+            color: #000000;
+            border: none;
+            padding: 12px 24px;
+            font-size: 13px;
+            font-weight: bold;
+            font-family: inherit;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-1px);
+        }
+
+        .action-button:disabled {
+            background-color: #333;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-mint {
+            background-color: #6EE7C8;
+            color: #07090D;
+        }
+
+        .btn-mint:hover {
+            background-color: #55d4b4;
+        }
+
+        @keyframes pulse-led {
+            from {
+                opacity: 0.4;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="printer-container" id="printerNode">
+        <!-- Structural Printer Hardware Base Layer -->
+        <div class="printer-hardware">
+            <div class="status-panel">
+                <div class="status-led"></div>
+                <span id="statusText">offline</span>
+            </div>
+            <span style="font-size: 11px; color: #6EE7C8; border: 1px solid rgba(110,231,200,0.3); padding: 2px 6px; border-radius: 4px;">EVENTGPT 4.0</span>
+            <div class="printer-slot"></div>
+        </div>
+
+        <!-- Animated Receipt Output Paper element -->
+        <div class="receipt-paper" id="receiptPaper">
+            <div class="receipt-line"><span>EVENTGPT · BLUEPRINT</span><span id="receiptTime">09:41</span></div>
+            <div class="receipt-divider"></div>
+
+            <div class="receipt-line"><span>event</span><span id="fieldEvent">Bespoke Celebration</span></div>
+            <div class="receipt-line"><span>city</span><span id="fieldCity">New Delhi NCR</span></div>
+            <div class="receipt-line"><span>guests</span><span id="fieldGuests">100 Guests</span></div>
+            <div class="receipt-divider"></div>
+            <div class="receipt-line"><span>venue (35%)</span><span id="fieldVenue">₹1,75,000</span></div>
+            <div class="receipt-line"><span>gastronomy (35%)</span><span id="fieldCatering">₹1,75,000</span></div>
+            <div class="receipt-line"><span>audio rig (18%)</span><span id="fieldProduction">₹90,000</span></div>
+            <div class="receipt-line"><span>logistics (12%)</span><span id="fieldLogistics">₹60,000</span></div>
+            <div class="receipt-divider"></div>
+            <div class="receipt-line danger-text"><span>TOTAL ESTIMATE</span><span id="fieldBudget">₹5,00,000</span></div>
+        </div>
+    </div>
+
+    <!-- Interface Button Controls -->
+    <div style="display: flex; gap: 12px; margin-top: 10px;">
+        <button class="action-button" id="triggerBtn" onclick="runPrintSequence()">Execute Print</button>
+        <button class="action-button btn-mint" onclick="window.print()">Download / Print</button>
+    </div>
+
+    <script>
+        const printerNode = document.getElementById('printerNode');
+        const triggerBtn = document.getElementById('triggerBtn');
+        const statusText = document.getElementById('statusText');
+        const receiptTime = document.getElementById('receiptTime');
+
+        // Populate parameters from URL query if provided
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('event')) document.getElementById('fieldEvent').innerText = params.get('event');
+        if (params.get('city')) document.getElementById('fieldCity').innerText = params.get('city');
+        if (params.get('guests')) document.getElementById('fieldGuests').innerText = params.get('guests');
+        if (params.get('venue')) document.getElementById('fieldVenue').innerText = params.get('venue');
+        if (params.get('catering')) document.getElementById('fieldCatering').innerText = params.get('catering');
+        if (params.get('production')) document.getElementById('fieldProduction').innerText = params.get('production');
+        if (params.get('logistics')) document.getElementById('fieldLogistics').innerText = params.get('logistics');
+        if (params.get('budget')) document.getElementById('fieldBudget').innerText = params.get('budget');
+
+        receiptTime.innerText = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        function runPrintSequence() {
+            if (printerNode.classList.contains('printing')) {
+                printerNode.classList.remove('printing');
+                statusText.innerText = "offline";
+                triggerBtn.innerText = "Execute Print";
+            } else {
+                triggerBtn.disabled = true;
+                statusText.innerText = "printing...";
+                printerNode.classList.add('printing');
+
+                setTimeout(() => {
+                    triggerBtn.disabled = false;
+                    triggerBtn.innerText = "Clear & Reset";
+                }, 2000);
+            }
+        }
+
+        // Auto print sequence if requested via URL
+        if (params.get('autoPrint') === 'true') {
+            setTimeout(runPrintSequence, 400);
+        }
+    </script>
+</body>
+
+</html>
