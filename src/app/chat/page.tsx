@@ -530,10 +530,12 @@ export default function ChatPage() {
       {/* 1. Compact Hero (60vh) with looping blurred video background, heading 'Ask EventGpt' */}
       <section className="relative w-full h-[52vh] flex items-center justify-center overflow-hidden bg-ink-950 border-b border-ink-700">
         <video
+          src="/media/home.mp4"
           autoPlay
           muted
           loop
           playsInline
+          preload="auto"
           className="absolute inset-0 w-full h-full object-cover filter blur-md brightness-50 scale-105 transform-gpu translate-z-0 will-change-transform"
         >
           <source src="/media/home.mp4" type="video/mp4" />

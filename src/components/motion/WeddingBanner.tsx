@@ -29,6 +29,16 @@ export default function WeddingBanner() {
   // Prefetch and warm the /wedding route on mount for zero freeze
   useEffect(() => {
     router.prefetch('/wedding')
+
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = true
+      const p = videoRef.current.play()
+      if (p !== undefined) {
+        p.catch(() => {})
+      }
+    }
+
     if (typeof window !== 'undefined') {
       const warm = () => fetch('/wedding', { priority: 'low' } as any).catch(() => {})
       if ('requestIdleCallback' in window) {
@@ -204,6 +214,7 @@ export default function WeddingBanner() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <video
             ref={videoRef}
+            src="/media/wedding.mp4"
             autoPlay
             muted
             loop

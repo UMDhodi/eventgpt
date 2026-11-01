@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 import Link from 'next/link'
 import PortalHeading from '@/components/motion/PortalHeading'
 
@@ -37,6 +37,20 @@ export default function Hero({
   editorialSubtitle,
   isLightWedding = false,
 }: HeroProps) {
+  const videoRef = useRef<HTMLVideoElement | null>(null)
+
+  useEffect(() => {
+    const v = videoRef.current
+    if (v) {
+      v.defaultMuted = true
+      v.muted = true
+      const p = v.play()
+      if (p !== undefined) {
+        p.catch(() => {})
+      }
+    }
+  }, [videoSrc])
+
   return (
     <section
       className={`relative w-full min-h-[92vh] sm:min-h-screen flex items-center justify-center overflow-hidden ${
@@ -46,11 +60,13 @@ export default function Hero({
       {/* Background Looping Video with 45% Ink Gradient Overlay */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
+          ref={videoRef}
+          src={videoSrc}
           autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          preload="auto"
           className="w-full h-full object-cover scale-105 filter brightness-95"
         >
           <source src={videoSrc} type="video/mp4" />

@@ -29,6 +29,16 @@ export default function BirthdayBanner() {
   // Prefetch and warm the /birthday-party route on mount for zero freeze
   useEffect(() => {
     router.prefetch('/birthday-party')
+
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = true
+      const p = videoRef.current.play()
+      if (p !== undefined) {
+        p.catch(() => {})
+      }
+    }
+
     if (typeof window !== 'undefined') {
       const warm = () => fetch('/birthday-party', { priority: 'low' } as any).catch(() => {})
       if ('requestIdleCallback' in window) {
@@ -204,6 +214,7 @@ export default function BirthdayBanner() {
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <video
             ref={videoRef}
+            src="/media/birthparty.mp4"
             autoPlay
             muted
             loop

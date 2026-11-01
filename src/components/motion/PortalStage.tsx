@@ -35,9 +35,18 @@ export default function PortalStage() {
   const concertPreloadStartedRef = useRef(false)
   const [isReady, setIsReady] = useState(false)
 
-  // Preload route and concert video
+  // Preload route and concert video, ensure background video autoplays cleanly
   useEffect(() => {
     router.prefetch('/music-concert')
+
+    if (homeVideoRef.current) {
+      homeVideoRef.current.defaultMuted = true
+      homeVideoRef.current.muted = true
+      const p = homeVideoRef.current.play()
+      if (p !== undefined) {
+        p.catch(() => {})
+      }
+    }
 
     if (typeof window !== 'undefined') {
       const warmRoute = () => {
@@ -360,6 +369,7 @@ export default function PortalStage() {
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <video
           ref={homeVideoRef}
+          src="/media/home-720p.mp4"
           autoPlay
           muted
           loop

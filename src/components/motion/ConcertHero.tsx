@@ -39,6 +39,15 @@ export default function ConcertHero() {
     // Double-verify scrollY is 0 before revealing anything (A6)
     window.scrollTo(0, 0)
 
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true
+      videoRef.current.muted = true
+      const p = videoRef.current.play()
+      if (p !== undefined) {
+        p.catch(() => {})
+      }
+    }
+
     useTransitionStore.getState().setState('arriving')
     const overlayEl = typeof document !== 'undefined' ? document.getElementById('portal-transition-overlay') : null
 
@@ -230,6 +239,7 @@ export default function ConcertHero() {
       <div className="absolute inset-0 z-0 overflow-hidden">
         <video
           ref={videoRef}
+          src="/media/concert-720p.mp4"
           autoPlay
           muted
           loop
